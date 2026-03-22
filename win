@@ -1,5 +1,5 @@
 <#
-    CrazyAlex Cloud Suite - v10 (Pink, Purple & Cyan Edition)
+    CrazyAlexTool
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -40,7 +40,7 @@ Add-Type -AssemblyName System.Windows.Forms
         <Border Background="#1A1A1A" Grid.Column="0" BorderBrush="#333333" BorderThickness="0,0,1,0">
             <StackPanel Margin="15">
                 <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="26" FontWeight="Black" Margin="0,15,0,0"/>
-                <TextBlock Text="CLOUD SUITE v10" Foreground="#F48FB1" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,40"/>
+                <TextBlock Text="Tool" Foreground="#F48FB1" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,40"/>
                 <TextBlock Text="SYSTEM STATUS:" Foreground="#777777" FontSize="12" Margin="0,0,0,5"/>
                 <TextBlock Name="StatusText" Text="System Ready." Foreground="#00FFFF" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,20"/>
             </StackPanel>
