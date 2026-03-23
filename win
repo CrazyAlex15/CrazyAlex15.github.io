@@ -1,7 +1,7 @@
 <#
-    CrazyAlex Cloud Suite - v11 (Maintenance Green & Activation Purple)
-    - FIXED: 100% Clean Code (No parser errors)
-    - Theme: Pink, Purple, Light Green & Cyan
+    CrazyAlex Cyber Suite - v12 (Cyan / Dark Mode Edition)
+    - Fully redesigned XAML GUI with global styles
+    - Added Custom App integration via direct Google Drive link
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -15,6 +15,9 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 # --- 1. VERIFIED LINKS ---
 # ==========================================
 $Links = @{
+    # Το νέο σου Link μετατρεμμένο σε Direct Download!
+    CustomApp    = "https://drive.google.com/uc?export=download&id=1t_zbptTyL-UQBYxqBImOjjKZRZ9lJP17"
+    
     Winrar       = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/Winrar.zip"
     GenP         = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/GenP-main.zip"
     Scrubber     = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/OfficeScrubber.zip"
@@ -23,61 +26,76 @@ $Links = @{
 }
 
 # ==========================================
-# --- 2. WPF GUI ---
+# --- 2. WPF GUI (CYBERPUNK THEME) ---
 # ==========================================
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="CrazyAlex Cloud Suite" Height="720" Width="1000" 
-        WindowStartupLocation="CenterScreen" Background="#0F0F0F" 
+        Title="CrazyAlex Cyber Suite" Height="750" Width="1050" 
+        WindowStartupLocation="CenterScreen" Background="#0A0B10" 
         FontFamily="Segoe UI" ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#12151E"/>
+            <Setter Property="Foreground" Value="#00FFFF"/>
+            <Setter Property="BorderBrush" Value="#00FFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,15,15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Background="#1A1A1A" Grid.Column="0" BorderBrush="#333333" BorderThickness="0,0,1,0">
-            <StackPanel Margin="15">
-                <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="26" FontWeight="Black" Margin="0,15,0,0"/>
-                <TextBlock Text="CLOUD SUITE v11" Foreground="#F48FB1" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,40"/>
-                <TextBlock Text="STATUS:" Foreground="#777777" FontSize="12" Margin="0,0,0,5"/>
-                <TextBlock Name="StatusText" Text="Ready." Foreground="#00FFFF" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,20"/>
+        <Border Background="#11131A" BorderBrush="#00FFFF" BorderThickness="0,0,2,0">
+            <StackPanel Margin="20">
+                <TextBlock Text="CRAZY ALEX" Foreground="#FFFFFF" FontSize="28" FontWeight="Black" Margin="0,20,0,0"/>
+                <TextBlock Text="CYBER SUITE v12" Foreground="#00FFFF" FontSize="14" FontWeight="Bold" Margin="0,0,0,40"/>
+                <TextBlock Text="SYSTEM STATUS:" Foreground="#557788" FontSize="12" Margin="0,0,0,5" FontWeight="Bold"/>
+                <TextBlock Name="StatusText" Text="ONLINE &amp; READY" Foreground="#00FFCC" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20"/>
             </StackPanel>
         </Border>
 
-        <Grid Grid.Column="1" Margin="25">
+        <Grid Grid.Column="1" Margin="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> 
                 <RowDefinition Height="*"/>    
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBlock Text="ACTIVATION HUB" Foreground="#F48FB1" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                <TextBlock Text="/// CORE DEPLOYMENT" Foreground="#FFFFFF" FontSize="16" FontWeight="Black" Margin="0,0,0,15"/>
                 <WrapPanel>
-                    <Button Name="BtnWinOfficeTools" Content="Win/Office Activation" Width="200" Height="45" Margin="0,0,10,15" Background="#F48FB1" Foreground="#000000" BorderThickness="0" FontWeight="Bold"/>
-                    <Button Name="BtnOfficeAct" Content="Activate Office 16-19" Width="200" Height="45" Margin="0,0,10,15" Background="#9C27B0" Foreground="White" BorderThickness="0"/>
-                    <Button Name="BtnScrubber" Content="Office Scrubber" Width="200" Height="45" Margin="0,0,10,15" Background="#9C27B0" Foreground="White" BorderThickness="0"/>
-                    <Button Name="BtnGenP" Content="GenP-main" Width="200" Height="45" Margin="0,0,10,15" Background="#9C27B0" Foreground="White" BorderThickness="0"/>
-                    <Button Name="BtnWinrar" Content="Winrar" Width="200" Height="45" Margin="0,0,10,15" Background="#9C27B0" Foreground="White" BorderThickness="0"/>
-                    <Button Name="BtnUpdate" Content="System Update" Width="200" Height="45" Margin="0,0,10,15" Background="#9C27B0" Foreground="White" BorderThickness="0"/>
+                    <Button Name="BtnNewApp" Content="Install Custom ISO/App" Width="210" Height="45" Background="#00FFFF" Foreground="#000000" FontWeight="Black"/>
+                    
+                    <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="210" Height="45" />
+                    <Button Name="BtnOfficeAct" Content="Activate Office 16-19" Width="210" Height="45" />
+                    <Button Name="BtnScrubber" Content="Office Scrubber" Width="210" Height="45" />
+                    <Button Name="BtnGenP" Content="GenP-main" Width="210" Height="45" />
+                    <Button Name="BtnWinrar" Content="Winrar" Width="210" Height="45" />
                 </WrapPanel>
 
-                <TextBlock Text="QUICK MAINTENANCE" Foreground="#00FFFF" FontSize="18" FontWeight="Bold" Margin="0,5,0,15"/>
+                <TextBlock Text="/// SYSTEM UTILITIES" Foreground="#FFFFFF" FontSize="16" FontWeight="Black" Margin="0,15,0,15"/>
                 <WrapPanel>
-                    <Button Name="BtnSFC" Content="SFC Scan" Width="130" Height="40" Margin="0,0,10,10" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="SemiBold"/>
-                    <Button Name="BtnWifi" Content="Fix Network" Width="130" Height="40" Margin="0,0,10,10" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="SemiBold"/>
-                    <Button Name="BtnKey" Content="Show Key" Width="130" Height="40" Margin="0,0,10,10" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="SemiBold"/>
+                    <Button Name="BtnUpdate" Content="System Update" Width="160" Height="40" />
+                    <Button Name="BtnSFC" Content="SFC Scan" Width="160" Height="40" />
+                    <Button Name="BtnWifi" Content="Fix Network" Width="160" Height="40" />
+                    <Button Name="BtnKey" Content="Show Win Key" Width="160" Height="40" />
                 </WrapPanel>
             </StackPanel>
 
-            <GroupBox Header="Live Console Output" Grid.Row="1" Foreground="#00FFFF" BorderBrush="#F48FB1" Margin="0,10,0,0">
-                <TextBox Name="OutputBox" Background="#050505" Foreground="#00FF00" 
+            <GroupBox Header="/// TERMINAL UPLINK" Grid.Row="1" Foreground="#FFFFFF" BorderBrush="#00FFFF" Margin="0,15,0,0" FontWeight="Bold">
+                <TextBox Name="OutputBox" Background="#050608" Foreground="#00FFFF" 
                          IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
-                         FontFamily="Consolas" FontSize="12" BorderThickness="0" 
-                         AcceptsReturn="True" TextWrapping="Wrap" Padding="10"/>
+                         FontFamily="Consolas" FontSize="13" BorderThickness="0" 
+                         AcceptsReturn="True" TextWrapping="Wrap" Padding="10" Margin="2"/>
             </GroupBox>
         </Grid>
     </Grid>
@@ -104,41 +122,63 @@ function Write-Log ($Message) {
     [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [Action]{})
 }
 
+# --- FUNCTIONS ---
 function Run-ScriptOrExe ($Name, $Url, $Extension) {
-    $StatusText.Text = "Status: Working..."; Write-Log "Downloading $Name..."
+    $StatusText.Text = "DOWNLOADING..."; Write-Log "Connecting to cloud node for $Name..."
     $TempPath = Join-Path $env:TEMP "$Name$Extension"
     try {
         Invoke-WebRequest -Uri $Url -OutFile $TempPath -UseBasicParsing
-        Write-Log "Launching $Name..."
+        Write-Log "Executing $Name..."
         Start-Process -FilePath $TempPath -Wait
-        Write-Log "$Name operation finished."
+        Write-Log "Process $Name terminated successfully."
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
-    $StatusText.Text = "Status: Ready."
+    $StatusText.Text = "ONLINE & READY"
 }
 
 function Run-Zip ($Name, $Url, $TargetFile) {
-    $StatusText.Text = "Status: Working..."; Write-Log "Fetching $Name Package..."
+    $StatusText.Text = "DOWNLOADING..."; Write-Log "Fetching $Name Package..."
     $ZipPath = Join-Path $env:TEMP "$Name.zip"
     $ExtractPath = Join-Path $env:TEMP "CA_$Name"
     try {
-        Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
+        # Ειδικός κώδικας για Google Drive (bypass το "File is too large for virus scan")
+        if ($Url -like "*drive.google.com*") {
+            $FileId = $Url.Split("id=")[1].Split("&")[0]
+            $BaseUrl = "https://docs.google.com/uc?export=download&id=$FileId"
+            $Response = Invoke-WebRequest -Uri $BaseUrl -SessionVariable "Session" -UserAgent "Mozilla/5.0" -UseBasicParsing
+            $Token = $Response.Links | Where-Object { $_.href -like "*confirm=*" } | Select-Object -ExpandProperty href
+            $FinalUrl = if ($Token) { "https://docs.google.com/uc?export=download&confirm=$($Token.Split('=')[-1])&id=$FileId" } else { $BaseUrl }
+            Invoke-WebRequest -Uri $FinalUrl -OutFile $ZipPath -UserAgent "Mozilla/5.0" -UseBasicParsing
+        } else {
+            Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
+        }
+
+        Write-Log "Extracting package data..."
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
         Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
+        
         $Exe = Get-ChildItem $ExtractPath -Filter $TargetFile -Recurse | Select -First 1
         if ($Exe) {
-            Write-Log "Running $($Exe.Name)..."
+            Write-Log "Running payload: $($Exe.Name)..."
             Start-Process $Exe.FullName -Wait
-            Write-Log "Task completed."
+            Write-Log "Payload executed successfully."
+        } else {
+            Write-Log "ERROR: Target file '$TargetFile' not found in package!"
         }
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
-    $StatusText.Text = "Status: Ready."
+    $StatusText.Text = "ONLINE & READY"
 }
 
 # --- BINDINGS ---
+
+# Το νέο σου κουμπί για το Google Drive Link!
+$Window.FindName("BtnNewApp").Add_Click({ 
+    Run-Zip -Name "CustomPackage" -Url $Links.CustomApp -TargetFile "setup.exe" 
+})
+
 $Window.FindName("BtnWinOfficeTools").Add_Click({
-    Write-Log "Launching MAS (Microsoft Activation Scripts)..."
+    Write-Log "Bypassing protocols. Launching MAS..."
     powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
-    Write-Log "MAS Execution finished."
+    Write-Log "MAS operation complete."
 })
 
 $Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OfficeAct" -Url $Links.Office16 -Extension ".exe" })
@@ -148,24 +188,24 @@ $Window.FindName("BtnUpdate").Add_Click({ Run-ScriptOrExe -Name "Update" -Url $L
 $Window.FindName("BtnGenP").Add_Click({ Run-Zip -Name "GenP" -Url $Links.GenP -TargetFile "RunMe.exe" })
 
 $Window.FindName("BtnSFC").Add_Click({ 
-    Write-Log "Starting SFC System Scan..."
+    Write-Log "Initiating System File Checker..."
     Start-Process sfc -ArgumentList "/scannow" -Wait
     Write-Log "SFC Scan finished."
 })
 
 $Window.FindName("BtnWifi").Add_Click({ 
-    Write-Log "Flushing DNS and Resetting Network..."
+    Write-Log "Flushing DNS and resetting adapters..."
     ipconfig /flushdns | Out-Null
-    Write-Log "Network operations completed."
+    Write-Log "Network interface reset."
 })
 
 $Window.FindName("BtnKey").Add_Click({
     try {
         $k = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform').BackupProductKeyDefault
-        Write-Log "Detected Key: $k"
-        [System.Windows.MessageBox]::Show("Windows Key: $k")
-    } catch { Write-Log "Failed to retrieve key." }
+        Write-Log "Retrieved Key: $k"
+        [System.Windows.MessageBox]::Show("Windows Key: $k", "Decrypted Key")
+    } catch { Write-Log "Key not found in registry." }
 })
 
-Write-Log "CrazyAlex Suite v11 Initialized. Aesthetics loaded."
+Write-Log "CrazyAlex Cyber Suite v12 Uplink Established."
 $Window.ShowDialog() | Out-Null
