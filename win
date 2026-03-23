@@ -1,7 +1,6 @@
 <#
-    CrazyAlex Cloud Suite - v13.1 (Hugging Face CDN)
-    - Colors: Baby Pink, Purple, Light Green, Cyan
-    - Removed Google Drive Bypass (Ultra-Fast Downloads)
+    CrazyAlex Cloud Suite - v14 (Clean & Fast Edition)
+    - Removed heavy 5GB Office ISOs for better performance.
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -16,10 +15,8 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 # ==========================================
 $Links = @{
     GenP         = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/GenP-main.zip?download=true"
-    Office2019   = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office2019_x64_x86.zip?download=true"
     Scrubber     = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/OfficeScrubber.zip?download=true"
     OldActivator = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office_16-19.exe?download=true"
-    Office2024   = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/ProPlus2024Retail.zip?download=true"
     UpdateSystem = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/UpdateSystemWithPSCheck.bat?download=true"
     MAS          = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/WinOfficeTools.bat?download=true"
     Winrar       = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Winrar.zip?download=true"
@@ -47,7 +44,7 @@ Add-Type -AssemblyName System.Windows.Forms
             <Grid Margin="20,0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="28" FontWeight="Black" Margin="0,0,10,0"/>
-                    <TextBlock Text="CLOUD SUITE v13.1" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    <TextBlock Text="CLOUD SUITE v14" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <TextBlock Text="STATUS:" Foreground="#777777" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
@@ -66,8 +63,6 @@ Add-Type -AssemblyName System.Windows.Forms
                 <TextBlock Text="/// TOOLS" Foreground="#F48FB1" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
                 <WrapPanel>
                     <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="190" Height="45" Margin="0,0,15,15" Background="#F48FB1" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
-                    <Button Name="BtnOffice2024" Content="Office2024" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
-                    <Button Name="BtnOffice2019" Content="Office2019" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnOfficeAct" Content="Old Activator" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnScrubber" Content="Office Scrubber" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnGenP" Content="GenP" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
@@ -120,7 +115,7 @@ function Write-Log ($Message) {
     [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [Action]{})
 }
 
-# --- CORE FUNCTIONS (CLEANED UP FOR CDN) ---
+# --- CORE FUNCTIONS ---
 function Run-ScriptOrExe ($Name, $Url, $Extension) {
     $StatusText.Text = "Working..."; Write-Log "Downloading $Name from CDN..."
     $TempPath = Join-Path $env:TEMP "$Name$Extension"
@@ -139,7 +134,6 @@ function Run-Zip ($Name, $Url, $TargetFile) {
     $ExtractPath = Join-Path $env:TEMP "CA_$Name"
     
     try {
-        # Καθαρό, γρήγορο Download χωρίς Google Drive Bypasses!
         Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
 
         Write-Log "Extracting files to Temp folder..."
@@ -156,7 +150,6 @@ function Run-Zip ($Name, $Url, $TargetFile) {
         }
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
     
-    # Cleanup Space
     Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
     Remove-Item $ExtractPath -Recurse -Force -ErrorAction SilentlyContinue
     $StatusText.Text = "Ready."
@@ -169,8 +162,6 @@ $Window.FindName("BtnWinOfficeTools").Add_Click({
     Write-Log "MAS Execution finished."
 })
 
-$Window.FindName("BtnOffice2024").Add_Click({ Run-Zip -Name "Office2024" -Url $Links.Office2024 -TargetFile "setup.exe" })
-$Window.FindName("BtnOffice2019").Add_Click({ Run-Zip -Name "Office2019" -Url $Links.Office2019 -TargetFile "setup.exe" })
 $Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OldActivator" -Url $Links.OldActivator -Extension ".exe" })
 $Window.FindName("BtnScrubber").Add_Click({ Run-Zip -Name "Scrubber" -Url $Links.Scrubber -TargetFile "OfficeScrubber.cmd" })
 $Window.FindName("BtnGenP").Add_Click({ Run-Zip -Name "GenP" -Url $Links.GenP -TargetFile "RunMe.exe" })
@@ -201,5 +192,5 @@ $Window.FindName("BtnKey").Add_Click({
     } catch { Write-Log "Failed to retrieve key." }
 })
 
-Write-Log "CrazyAlex Suite v13.1 HF Edition Initialized."
+Write-Log "CrazyAlex Suite v14 Initialized (Lightweight Mode)."
 $Window.ShowDialog() | Out-Null
