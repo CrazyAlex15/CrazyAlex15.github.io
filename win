@@ -1,5 +1,7 @@
 <#
-    CrazyAlex Cyber Suite - v12.1 (Google Drive 5GB+ Bypass)
+    CrazyAlex Cloud Suite - v13.1 (Hugging Face CDN)
+    - Colors: Baby Pink, Purple, Light Green, Cyan
+    - Removed Google Drive Bypass (Ultra-Fast Downloads)
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -10,93 +12,94 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 }
 
 # ==========================================
-# --- 1. VERIFIED LINKS ---
+# --- 1. HUGGING FACE VERIFIED LINKS ---
 # ==========================================
 $Links = @{
-    CustomApp    = "https://drive.google.com/uc?export=download&id=1t_zbptTyL-UQBYxqBImOjjKZRZ9lJP17"
-    Winrar       = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/Winrar.zip"
-    GenP         = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/GenP-main.zip"
-    Scrubber     = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/OfficeScrubber.zip"
-    Office16     = "https://github.com/CrazyAlex15/CrazyAlexTool/releases/download/V1.0/Office_16-19.exe"
-    UpdateSystem = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/UpdateSystemWithPSCheck.bat"
+    GenP         = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/GenP-main.zip?download=true"
+    Office2019   = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office2019_x64_x86.zip?download=true"
+    Scrubber     = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/OfficeScrubber.zip?download=true"
+    OldActivator = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office_16-19.exe?download=true"
+    Office2024   = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/ProPlus2024Retail.zip?download=true"
+    UpdateSystem = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/UpdateSystemWithPSCheck.bat?download=true"
+    MAS          = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/WinOfficeTools.bat?download=true"
+    Winrar       = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Winrar.zip?download=true"
 }
 
 # ==========================================
-# --- 2. WPF GUI ---
+# --- 2. WPF GUI (DASHBOARD LAYOUT) ---
 # ==========================================
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="CrazyAlex Cyber Suite" Height="750" Width="1050" 
-        WindowStartupLocation="CenterScreen" Background="#0A0B10" 
+        Title="CrazyAlex Cloud Suite" Height="750" Width="950" 
+        WindowStartupLocation="CenterScreen" Background="#0A0A0A" 
         FontFamily="Segoe UI" ResizeMode="NoResize">
-    
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#12151E"/>
-            <Setter Property="Foreground" Value="#00FFFF"/>
-            <Setter Property="BorderBrush" Value="#00FFFF"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,15,15"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-        </Style>
-    </Window.Resources>
-
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="220"/>
+        </Grid.RowDefinitions>
 
-        <Border Background="#11131A" BorderBrush="#00FFFF" BorderThickness="0,0,2,0">
-            <StackPanel Margin="20">
-                <TextBlock Text="CRAZY ALEX" Foreground="#FFFFFF" FontSize="28" FontWeight="Black" Margin="0,20,0,0"/>
-                <TextBlock Text="CYBER SUITE v12.1" Foreground="#00FFFF" FontSize="14" FontWeight="Bold" Margin="0,0,0,40"/>
-                <TextBlock Text="SYSTEM STATUS:" Foreground="#557788" FontSize="12" Margin="0,0,0,5" FontWeight="Bold"/>
-                <TextBlock Name="StatusText" Text="ONLINE &amp; READY" Foreground="#00FFCC" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20"/>
-            </StackPanel>
+        <Border Grid.Row="0" Background="#111111" BorderBrush="#333333" BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="28" FontWeight="Black" Margin="0,0,10,0"/>
+                    <TextBlock Text="CLOUD SUITE v13.1" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="STATUS:" Foreground="#777777" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+                    <TextBlock Name="StatusText" Text="Ready." Foreground="#A5D6A7" FontSize="14" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <Grid Grid.Column="1" Margin="30">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> 
-                <RowDefinition Height="*"/>    
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Margin="25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0">
-                <TextBlock Text="/// CORE DEPLOYMENT" Foreground="#FFFFFF" FontSize="16" FontWeight="Black" Margin="0,0,0,15"/>
+            <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                <TextBlock Text="/// TOOLS" Foreground="#F48FB1" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
                 <WrapPanel>
-                    <Button Name="BtnNewApp" Content="Install Custom ISO/App" Width="210" Height="45" Background="#00FFFF" Foreground="#000000" FontWeight="Black"/>
-                    <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="210" Height="45" />
-                    <Button Name="BtnOfficeAct" Content="Activate Office 16-19" Width="210" Height="45" />
-                    <Button Name="BtnScrubber" Content="Office Scrubber" Width="210" Height="45" />
-                    <Button Name="BtnGenP" Content="GenP-main" Width="210" Height="45" />
-                    <Button Name="BtnWinrar" Content="Winrar" Width="210" Height="45" />
-                </WrapPanel>
-
-                <TextBlock Text="/// SYSTEM UTILITIES" Foreground="#FFFFFF" FontSize="16" FontWeight="Black" Margin="0,15,0,15"/>
-                <WrapPanel>
-                    <Button Name="BtnUpdate" Content="System Update" Width="160" Height="40" />
-                    <Button Name="BtnSFC" Content="SFC Scan" Width="160" Height="40" />
-                    <Button Name="BtnWifi" Content="Fix Network" Width="160" Height="40" />
-                    <Button Name="BtnKey" Content="Show Win Key" Width="160" Height="40" />
+                    <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="190" Height="45" Margin="0,0,15,15" Background="#F48FB1" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnOffice2024" Content="Office2024" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnOffice2019" Content="Office2019" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnOfficeAct" Content="Old Activator" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnScrubber" Content="Office Scrubber" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnGenP" Content="GenP" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnWinrar" Content="WinRAR" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnUpdate" Content="System Update" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                 </WrapPanel>
             </StackPanel>
 
-            <GroupBox Header="/// TERMINAL UPLINK" Grid.Row="1" Foreground="#FFFFFF" BorderBrush="#00FFFF" Margin="0,15,0,0" FontWeight="Bold">
-                <TextBox Name="OutputBox" Background="#050608" Foreground="#00FFFF" 
-                         IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
-                         FontFamily="Consolas" FontSize="13" BorderThickness="0" 
-                         AcceptsReturn="True" TextWrapping="Wrap" Padding="10" Margin="2"/>
-            </GroupBox>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="/// QUICK MAINTENANCE" Foreground="#00FFFF" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
+                <StackPanel>
+                    <Button Name="BtnSFC" Content="SFC Scan" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnWifi" Content="Fix Network" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnKey" Content="Show Key" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
+
+        <Border Grid.Row="2" Background="#050505" BorderBrush="#00FFFF" BorderThickness="0,2,0,0">
+            <Grid Margin="15">
+                <TextBlock Text="LIVE CONSOLE OUTPUT" Foreground="#777777" FontSize="11" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Top"/>
+                <TextBox Name="OutputBox" Background="Transparent" Foreground="#00FF00" 
+                         IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
+                         FontFamily="Consolas" FontSize="12" BorderThickness="0" 
+                         AcceptsReturn="True" TextWrapping="Wrap" Margin="0,20,0,0"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
 "@
 
+# --- LOAD GUI ---
 $Reader = (New-Object System.Xml.XmlNodeReader $XAML)
 try {
     $Window = [Windows.Markup.XamlReader]::Load($Reader)
@@ -117,103 +120,86 @@ function Write-Log ($Message) {
     [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [Action]{})
 }
 
-# --- FUNCTIONS ---
+# --- CORE FUNCTIONS (CLEANED UP FOR CDN) ---
 function Run-ScriptOrExe ($Name, $Url, $Extension) {
-    $StatusText.Text = "DOWNLOADING..."; Write-Log "Connecting to cloud node for $Name..."
+    $StatusText.Text = "Working..."; Write-Log "Downloading $Name from CDN..."
     $TempPath = Join-Path $env:TEMP "$Name$Extension"
     try {
         Invoke-WebRequest -Uri $Url -OutFile $TempPath -UseBasicParsing
-        Write-Log "Executing $Name..."
+        Write-Log "Launching $Name..."
         Start-Process -FilePath $TempPath -Wait
-        Write-Log "Process $Name terminated successfully."
+        Write-Log "$Name operation finished."
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
-    $StatusText.Text = "ONLINE & READY"
+    $StatusText.Text = "Ready."
 }
 
 function Run-Zip ($Name, $Url, $TargetFile) {
-    $StatusText.Text = "DOWNLOADING..."; Write-Log "Fetching $Name Package..."
+    $StatusText.Text = "Working..."; Write-Log "Downloading $Name Package (Direct CDN)..."
     $ZipPath = Join-Path $env:TEMP "$Name.zip"
     $ExtractPath = Join-Path $env:TEMP "CA_$Name"
     
     try {
-        # THE GOOGLE DRIVE 5GB BYPASS
-        if ($Url -like "*drive.google.com*") {
-            Write-Log "Bypassing Google Drive Virus Scan Protocol..."
-            $FileId = $Url.Split("id=")[1].Split("&")[0]
-            $BaseUrl = "https://drive.google.com/uc?export=download&id=$FileId"
-            
-            $WebSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
-            $Response = Invoke-WebRequest -Uri $BaseUrl -WebSession $WebSession -UseBasicParsing
-            
-            # Ψάχνουμε το κρυφό 'confirm=' token που ζητάει η Google
-            if ($Response.Content -match 'confirm=([a-zA-Z0-9\-_]+)') {
-                $Token = $Matches[1]
-                Write-Log "Token Acquired ($Token). Commencing heavy data transfer (5GB)..."
-                $FinalUrl = "https://drive.google.com/uc?export=download&confirm=$Token&id=$FileId"
-                Invoke-WebRequest -Uri $FinalUrl -OutFile $ZipPath -WebSession $WebSession -UseBasicParsing
-            } else {
-                Write-Log "Token not found. Attempting direct connection..."
-                Invoke-WebRequest -Uri $BaseUrl -OutFile $ZipPath -WebSession $WebSession -UseBasicParsing
-            }
-        } else {
-            Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
-        }
+        # Καθαρό, γρήγορο Download χωρίς Google Drive Bypasses!
+        Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
 
-        Write-Log "Download complete. Extracting package data..."
+        Write-Log "Extracting files to Temp folder..."
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
         Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
         
         $Exe = Get-ChildItem $ExtractPath -Filter $TargetFile -Recurse | Select -First 1
         if ($Exe) {
-            Write-Log "Running payload: $($Exe.Name)..."
+            Write-Log "Running Setup: $($Exe.Name)..."
             Start-Process $Exe.FullName -Wait
-            Write-Log "Payload executed successfully."
+            Write-Log "Task completed successfully."
         } else {
-            Write-Log "ERROR: Target file '$TargetFile' not found in package!"
+            Write-Log "ERROR: Target file '$TargetFile' not found inside the ZIP."
         }
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
     
-    # Cleanup (Optional: If you want to keep the 5GB file, put a # before the next line)
+    # Cleanup Space
     Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
-    $StatusText.Text = "ONLINE & READY"
+    Remove-Item $ExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+    $StatusText.Text = "Ready."
 }
 
 # --- BINDINGS ---
-$Window.FindName("BtnNewApp").Add_Click({ 
-    Run-Zip -Name "CustomApp_5GB" -Url $Links.CustomApp -TargetFile "setup.exe" 
-})
-
 $Window.FindName("BtnWinOfficeTools").Add_Click({
-    Write-Log "Bypassing protocols. Launching MAS..."
+    Write-Log "Launching MAS (Microsoft Activation Scripts)..."
     powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
-    Write-Log "MAS operation complete."
+    Write-Log "MAS Execution finished."
 })
 
-$Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OfficeAct" -Url $Links.Office16 -Extension ".exe" })
+$Window.FindName("BtnOffice2024").Add_Click({ Run-Zip -Name "Office2024" -Url $Links.Office2024 -TargetFile "setup.exe" })
+$Window.FindName("BtnOffice2019").Add_Click({ Run-Zip -Name "Office2019" -Url $Links.Office2019 -TargetFile "setup.exe" })
+$Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OldActivator" -Url $Links.OldActivator -Extension ".exe" })
 $Window.FindName("BtnScrubber").Add_Click({ Run-Zip -Name "Scrubber" -Url $Links.Scrubber -TargetFile "OfficeScrubber.cmd" })
-$Window.FindName("BtnWinrar").Add_Click({ Run-Zip -Name "Winrar" -Url $Links.Winrar -TargetFile "Winrar.cmd" })
-$Window.FindName("BtnUpdate").Add_Click({ Run-ScriptOrExe -Name "Update" -Url $Links.UpdateSystem -Extension ".bat" })
 $Window.FindName("BtnGenP").Add_Click({ Run-Zip -Name "GenP" -Url $Links.GenP -TargetFile "RunMe.exe" })
+$Window.FindName("BtnWinrar").Add_Click({ Run-Zip -Name "Winrar" -Url $Links.Winrar -TargetFile "Winrar.cmd" })
+$Window.FindName("BtnUpdate").Add_Click({ Run-ScriptOrExe -Name "SysUpdate" -Url $Links.UpdateSystem -Extension ".bat" })
 
 $Window.FindName("BtnSFC").Add_Click({ 
-    Write-Log "Initiating System File Checker..."
+    Write-Log "Starting SFC System Scan..."
     Start-Process sfc -ArgumentList "/scannow" -Wait
     Write-Log "SFC Scan finished."
 })
 
 $Window.FindName("BtnWifi").Add_Click({ 
-    Write-Log "Flushing DNS and resetting adapters..."
+    Write-Log "Flushing DNS and Resetting Network..."
     ipconfig /flushdns | Out-Null
-    Write-Log "Network interface reset."
+    Write-Log "Network operations completed."
 })
 
 $Window.FindName("BtnKey").Add_Click({
     try {
         $k = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform').BackupProductKeyDefault
-        Write-Log "Retrieved Key: $k"
-        [System.Windows.MessageBox]::Show("Windows Key: $k", "Decrypted Key")
-    } catch { Write-Log "Key not found in registry." }
+        if ($k) {
+            Write-Log "Detected Key: $k"
+            [System.Windows.MessageBox]::Show("Windows Key: $k", "Product Key")
+        } else {
+            Write-Log "No OEM/Digital key found."
+        }
+    } catch { Write-Log "Failed to retrieve key." }
 })
 
-Write-Log "CrazyAlex Cyber Suite v12.1 Uplink Established."
+Write-Log "CrazyAlex Suite v13.1 HF Edition Initialized."
 $Window.ShowDialog() | Out-Null
