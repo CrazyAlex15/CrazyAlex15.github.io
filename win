@@ -1,6 +1,6 @@
 <#
-    CrazyAlex Cloud Suite - v14 (Clean & Fast Edition)
-    - Removed heavy 5GB Office ISOs for better performance.
+    CrazyAlex Cloud Suite - v15 (Smart Installer Edition)
+    - Replaced heavy ISOs with the Smart Online Office Installer.
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -18,7 +18,6 @@ $Links = @{
     Scrubber     = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/OfficeScrubber.zip?download=true"
     OldActivator = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office_16-19.exe?download=true"
     UpdateSystem = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/UpdateSystemWithPSCheck.bat?download=true"
-    MAS          = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/WinOfficeTools.bat?download=true"
     Winrar       = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Winrar.zip?download=true"
 }
 
@@ -44,7 +43,7 @@ Add-Type -AssemblyName System.Windows.Forms
             <Grid Margin="20,0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="28" FontWeight="Black" Margin="0,0,10,0"/>
-                    <TextBlock Text="CLOUD SUITE v14" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    <TextBlock Text="CLOUD SUITE v15" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <TextBlock Text="STATUS:" Foreground="#777777" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
@@ -63,6 +62,7 @@ Add-Type -AssemblyName System.Windows.Forms
                 <TextBlock Text="/// TOOLS" Foreground="#F48FB1" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
                 <WrapPanel>
                     <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="190" Height="45" Margin="0,0,15,15" Background="#F48FB1" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnInstallOffice" Content="Install office" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnOfficeAct" Content="Old Activator" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnScrubber" Content="Office Scrubber" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
                     <Button Name="BtnGenP" Content="GenP" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
@@ -135,7 +135,6 @@ function Run-Zip ($Name, $Url, $TargetFile) {
     
     try {
         Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
-
         Write-Log "Extracting files to Temp folder..."
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
         Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
@@ -160,6 +159,13 @@ $Window.FindName("BtnWinOfficeTools").Add_Click({
     Write-Log "Launching MAS (Microsoft Activation Scripts)..."
     powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
     Write-Log "MAS Execution finished."
+})
+
+$Window.FindName("BtnInstallOffice").Add_Click({
+    Write-Log "Launching Online Office Deployment Tool..."
+    Write-Log ">>> TIP: In the window that opens, select 'Install Office' from the menu!"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+    Write-Log "Office Deployment Tool closed."
 })
 
 $Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OldActivator" -Url $Links.OldActivator -Extension ".exe" })
@@ -192,5 +198,5 @@ $Window.FindName("BtnKey").Add_Click({
     } catch { Write-Log "Failed to retrieve key." }
 })
 
-Write-Log "CrazyAlex Suite v14 Initialized (Lightweight Mode)."
+Write-Log "CrazyAlex Suite v15 Initialized (Smart Installer Mode)."
 $Window.ShowDialog() | Out-Null
