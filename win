@@ -1,7 +1,5 @@
 <#
-    CrazyAlex Cyber Suite - v12 (Cyan / Dark Mode Edition)
-    - Fully redesigned XAML GUI with global styles
-    - Added Custom App integration via direct Google Drive link
+    CrazyAlex Cyber Suite - v12.1 (Google Drive 5GB+ Bypass)
 #>
 
 # --- AUTO-ADMIN ELEVATION ---
@@ -15,9 +13,7 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 # --- 1. VERIFIED LINKS ---
 # ==========================================
 $Links = @{
-    # Το νέο σου Link μετατρεμμένο σε Direct Download!
     CustomApp    = "https://drive.google.com/uc?export=download&id=1t_zbptTyL-UQBYxqBImOjjKZRZ9lJP17"
-    
     Winrar       = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/Winrar.zip"
     GenP         = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/GenP-main.zip"
     Scrubber     = "https://github.com/CrazyAlex15/CrazyAlexTool/raw/refs/heads/main/OfficeScrubber.zip"
@@ -26,7 +22,7 @@ $Links = @{
 }
 
 # ==========================================
-# --- 2. WPF GUI (CYBERPUNK THEME) ---
+# --- 2. WPF GUI ---
 # ==========================================
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
@@ -58,7 +54,7 @@ Add-Type -AssemblyName System.Windows.Forms
         <Border Background="#11131A" BorderBrush="#00FFFF" BorderThickness="0,0,2,0">
             <StackPanel Margin="20">
                 <TextBlock Text="CRAZY ALEX" Foreground="#FFFFFF" FontSize="28" FontWeight="Black" Margin="0,20,0,0"/>
-                <TextBlock Text="CYBER SUITE v12" Foreground="#00FFFF" FontSize="14" FontWeight="Bold" Margin="0,0,0,40"/>
+                <TextBlock Text="CYBER SUITE v12.1" Foreground="#00FFFF" FontSize="14" FontWeight="Bold" Margin="0,0,0,40"/>
                 <TextBlock Text="SYSTEM STATUS:" Foreground="#557788" FontSize="12" Margin="0,0,0,5" FontWeight="Bold"/>
                 <TextBlock Name="StatusText" Text="ONLINE &amp; READY" Foreground="#00FFCC" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20"/>
             </StackPanel>
@@ -74,7 +70,6 @@ Add-Type -AssemblyName System.Windows.Forms
                 <TextBlock Text="/// CORE DEPLOYMENT" Foreground="#FFFFFF" FontSize="16" FontWeight="Black" Margin="0,0,0,15"/>
                 <WrapPanel>
                     <Button Name="BtnNewApp" Content="Install Custom ISO/App" Width="210" Height="45" Background="#00FFFF" Foreground="#000000" FontWeight="Black"/>
-                    
                     <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="210" Height="45" />
                     <Button Name="BtnOfficeAct" Content="Activate Office 16-19" Width="210" Height="45" />
                     <Button Name="BtnScrubber" Content="Office Scrubber" Width="210" Height="45" />
@@ -139,20 +134,32 @@ function Run-Zip ($Name, $Url, $TargetFile) {
     $StatusText.Text = "DOWNLOADING..."; Write-Log "Fetching $Name Package..."
     $ZipPath = Join-Path $env:TEMP "$Name.zip"
     $ExtractPath = Join-Path $env:TEMP "CA_$Name"
+    
     try {
-        # Ειδικός κώδικας για Google Drive (bypass το "File is too large for virus scan")
+        # THE GOOGLE DRIVE 5GB BYPASS
         if ($Url -like "*drive.google.com*") {
+            Write-Log "Bypassing Google Drive Virus Scan Protocol..."
             $FileId = $Url.Split("id=")[1].Split("&")[0]
-            $BaseUrl = "https://docs.google.com/uc?export=download&id=$FileId"
-            $Response = Invoke-WebRequest -Uri $BaseUrl -SessionVariable "Session" -UserAgent "Mozilla/5.0" -UseBasicParsing
-            $Token = $Response.Links | Where-Object { $_.href -like "*confirm=*" } | Select-Object -ExpandProperty href
-            $FinalUrl = if ($Token) { "https://docs.google.com/uc?export=download&confirm=$($Token.Split('=')[-1])&id=$FileId" } else { $BaseUrl }
-            Invoke-WebRequest -Uri $FinalUrl -OutFile $ZipPath -UserAgent "Mozilla/5.0" -UseBasicParsing
+            $BaseUrl = "https://drive.google.com/uc?export=download&id=$FileId"
+            
+            $WebSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+            $Response = Invoke-WebRequest -Uri $BaseUrl -WebSession $WebSession -UseBasicParsing
+            
+            # Ψάχνουμε το κρυφό 'confirm=' token που ζητάει η Google
+            if ($Response.Content -match 'confirm=([a-zA-Z0-9\-_]+)') {
+                $Token = $Matches[1]
+                Write-Log "Token Acquired ($Token). Commencing heavy data transfer (5GB)..."
+                $FinalUrl = "https://drive.google.com/uc?export=download&confirm=$Token&id=$FileId"
+                Invoke-WebRequest -Uri $FinalUrl -OutFile $ZipPath -WebSession $WebSession -UseBasicParsing
+            } else {
+                Write-Log "Token not found. Attempting direct connection..."
+                Invoke-WebRequest -Uri $BaseUrl -OutFile $ZipPath -WebSession $WebSession -UseBasicParsing
+            }
         } else {
             Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
         }
 
-        Write-Log "Extracting package data..."
+        Write-Log "Download complete. Extracting package data..."
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
         Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
         
@@ -165,14 +172,15 @@ function Run-Zip ($Name, $Url, $TargetFile) {
             Write-Log "ERROR: Target file '$TargetFile' not found in package!"
         }
     } catch { Write-Log "ERROR: $($_.Exception.Message)" }
+    
+    # Cleanup (Optional: If you want to keep the 5GB file, put a # before the next line)
+    Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
     $StatusText.Text = "ONLINE & READY"
 }
 
 # --- BINDINGS ---
-
-# Το νέο σου κουμπί για το Google Drive Link!
 $Window.FindName("BtnNewApp").Add_Click({ 
-    Run-Zip -Name "CustomPackage" -Url $Links.CustomApp -TargetFile "setup.exe" 
+    Run-Zip -Name "CustomApp_5GB" -Url $Links.CustomApp -TargetFile "setup.exe" 
 })
 
 $Window.FindName("BtnWinOfficeTools").Add_Click({
@@ -207,5 +215,5 @@ $Window.FindName("BtnKey").Add_Click({
     } catch { Write-Log "Key not found in registry." }
 })
 
-Write-Log "CrazyAlex Cyber Suite v12 Uplink Established."
+Write-Log "CrazyAlex Cyber Suite v12.1 Uplink Established."
 $Window.ShowDialog() | Out-Null
