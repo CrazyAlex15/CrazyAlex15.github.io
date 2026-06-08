@@ -1,112 +1,202 @@
-# ==========================================
-# --- 1. SETUP & LOGGING ---
-# ==========================================
-$ScriptRoot = "$env:TEMP\CrazyAlexTool"
-$LogFile = "$env:USERPROFILE\Desktop\CrazyAlex_Logs.txt"
+<#
+    CrazyAlex Cloud Suite - v15 (Smart Installer Edition)
+    - Replaced heavy ISOs with the Smart Online Office Installer.
+#>
 
-function Write-Log {
-    param([string]$Message)
-    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    "[$Timestamp] $Message" | Out-File -FilePath $LogFile -Append
+# --- AUTO-ADMIN ELEVATION ---
+$principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    Exit
 }
 
-if (!(Test-Path $ScriptRoot)) { New-Item -ItemType Directory -Path $ScriptRoot | Out-Null }
-Write-Log "Tool Initialized. Root: $ScriptRoot"
+# ==========================================
+# --- 1. HUGGING FACE VERIFIED LINKS ---
+# ==========================================
+$Links = @{
+    GenP         = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/GenP-main.zip?download=true"
+    Scrubber     = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/OfficeScrubber.zip?download=true"
+    OldActivator = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Office_16-19.exe?download=true"
+    UpdateSystem = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/UpdateSystemWithPSCheck.bat?download=true"
+    Winrar       = "https://huggingface.co/datasets/CrazyAlex15/CrazyAlexTools/resolve/main/Winrar.zip?download=true"
+}
 
 # ==========================================
-# --- 2. GUI & FUNCTIONS ---
+# --- 2. WPF GUI (DASHBOARD LAYOUT) ---
 # ==========================================
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="CrazyAlex Cloud Suite" Height="680" Width="880"
-        WindowStartupLocation="CenterScreen" Background="#121212"
+        Title="CrazyAlex Cloud Suite" Height="750" Width="950" 
+        WindowStartupLocation="CenterScreen" Background="#0A0A0A" 
         FontFamily="Segoe UI" ResizeMode="NoResize">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Border Background="#1E1E1E" Grid.Column="0">
-            <StackPanel Margin="15">
-                <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="26" FontWeight="Black"/>
-                <TextBlock Name="StatusText" Text="Ready to deploy." Foreground="#00FF00" FontSize="13" TextWrapping="Wrap" Margin="0,20,0,0"/>
-            </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="220"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#111111" BorderBrush="#333333" BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="CRAZY ALEX" Foreground="#00FFFF" FontSize="28" FontWeight="Black" Margin="0,0,10,0"/>
+                    <TextBlock Text="CLOUD SUITE v15" Foreground="#F48FB1" FontSize="14" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="STATUS:" Foreground="#777777" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+                    <TextBlock Name="StatusText" Text="Ready." Foreground="#A5D6A7" FontSize="14" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
         </Border>
-        <Grid Grid.Column="1" Margin="25">
-            <StackPanel>
-                <Button Name="BtnWinrar" Content="Activate WinRAR" Width="200" Height="45" Margin="0,0,15,15" Background="#5C2E7E" Foreground="White" Cursor="Hand"/>
-                <TextBlock Text="Select GenP Version:" Foreground="White" Margin="0,10,0,5"/>
-                <ComboBox Name="GenPSelector" Width="200" Height="30" Margin="0,0,15,15"/>
-                <Button Name="BtnLaunchGenP" Content="Launch Selected GenP" Width="200" Height="45" Background="#5C2E7E" Foreground="White" Cursor="Hand"/>
+
+        <Grid Grid.Row="1" Margin="25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                <TextBlock Text="/// TOOLS" Foreground="#F48FB1" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
+                <WrapPanel>
+                    <Button Name="BtnWinOfficeTools" Content="MAS Activation" Width="190" Height="45" Margin="0,0,15,15" Background="#F48FB1" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnInstallOffice" Content="Install office" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnOfficeAct" Content="Old Activator" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnScrubber" Content="Office Scrubber" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnGenP" Content="GenP" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnWinrar" Content="WinRAR" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                    <Button Name="BtnUpdate" Content="System Update" Width="190" Height="45" Margin="0,0,15,15" Background="#9C27B0" Foreground="White" BorderThickness="0" FontWeight="SemiBold" Cursor="Hand"/>
+                </WrapPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="/// QUICK MAINTENANCE" Foreground="#00FFFF" FontSize="18" FontWeight="Black" Margin="0,0,0,15"/>
+                <StackPanel>
+                    <Button Name="BtnSFC" Content="SFC Scan" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnWifi" Content="Fix Network" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                    <Button Name="BtnKey" Content="Show Key" Height="45" Margin="0,0,0,15" Background="#A5D6A7" Foreground="Black" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
+
+        <Border Grid.Row="2" Background="#050505" BorderBrush="#00FFFF" BorderThickness="0,2,0,0">
+            <Grid Margin="15">
+                <TextBlock Text="LIVE CONSOLE OUTPUT" Foreground="#777777" FontSize="11" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Top"/>
+                <TextBox Name="OutputBox" Background="Transparent" Foreground="#00FF00" 
+                         IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
+                         FontFamily="Consolas" FontSize="12" BorderThickness="0" 
+                         AcceptsReturn="True" TextWrapping="Wrap" Margin="0,20,0,0"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
 "@
 
-$Reader = New-Object System.Xml.XmlNodeReader $XAML
-$Window = [Windows.Markup.XamlReader]::Load($Reader)
-
-$StatusText = $Window.FindName("StatusText")
-$BtnWinrar = $Window.FindName("BtnWinrar")
-$GenPSelector = $Window.FindName("GenPSelector")
-$BtnLaunchGenP = $Window.FindName("BtnLaunchGenP")
-
-function Get-Tool {
-    param([string]$Url, [string]$ZipName)
-    $ZipPath = Join-Path $ScriptRoot "$ZipName.zip"
-    $ExtractPath = Join-Path $ScriptRoot $ZipName
-    if (!(Test-Path $ExtractPath)) {
-        Write-Log "Downloading: $ZipName from $Url"
-        Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
-        Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
-        Write-Log "Extracted: $ZipName"
-    }
-    return $ExtractPath
+# --- LOAD GUI ---
+$Reader = (New-Object System.Xml.XmlNodeReader $XAML)
+try {
+    $Window = [Windows.Markup.XamlReader]::Load($Reader)
+} catch {
+    Write-Host "XAML Error: $($_.Exception.Message)" -ForegroundColor Red
+    pause ; exit
 }
 
-# ==========================================
-# --- 3. DYNAMIC DISCOVERY ---
-# ==========================================
-# REPLACE THESE URLS WITH YOUR ACTUAL RAW LINKS
-$WinrarFolder = Get-Tool -Url "https://github.com/CrazyAlex15/CrazyAlexTool/raw/main/Winrar.zip" -ZipName "Winrar"
-$GenPPath = Get-Tool -Url "https://github.com/CrazyAlex15/CrazyAlexTool/raw/main/GenP-main.zip" -ZipName "GenPmain"
+$StatusText = $Window.FindName("StatusText")
+$OutputBox = $Window.FindName("OutputBox")
 
-# Find versions in the extracted GenP folder (Recursive search)
-$Versions = Get-ChildItem -Path $GenPPath -Filter "*.exe" -Recurse
-foreach ($v in $Versions) { $GenPSelector.Items.Add($v.Name) | Out-Null }
+function Write-Log ($Message) {
+    $Timestamp = Get-Date -Format "HH:mm:ss"
+    if ($OutputBox) {
+        $OutputBox.AppendText("[$Timestamp] $Message`r`n")
+        $OutputBox.ScrollToEnd()
+    }
+    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Invoke([System.Windows.Threading.DispatcherPriority]::Background, [Action]{})
+}
 
-# ==========================================
-# --- 4. BUTTON ACTIONS ---
-# ==========================================
-$BtnWinrar.Add_Click({
-    Write-Log "User clicked Activate WinRAR"
-    $CmdPath = Join-Path $WinrarFolder "Winrar.cmd"
+# --- CORE FUNCTIONS ---
+function Run-ScriptOrExe ($Name, $Url, $Extension) {
+    $StatusText.Text = "Working..."; Write-Log "Downloading $Name from CDN..."
+    $TempPath = Join-Path $env:TEMP "$Name$Extension"
     try {
-        Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$CmdPath`"" -WindowStyle Hidden -Wait
-        $StatusText.Text = "WinRAR Activation Complete."
-        Write-Log "WinRAR process successful."
-    } catch {
-        Write-Log "ERROR: WinRAR activation failed: $($_.Exception.Message)"
-    }
-})
+        Invoke-WebRequest -Uri $Url -OutFile $TempPath -UseBasicParsing
+        Write-Log "Launching $Name..."
+        Start-Process -FilePath $TempPath -Wait
+        Write-Log "$Name operation finished."
+    } catch { Write-Log "ERROR: $($_.Exception.Message)" }
+    $StatusText.Text = "Ready."
+}
 
-$BtnLaunchGenP.Add_Click({
-    $Selected = $GenPSelector.SelectedItem
-    if ($Selected) {
-        Write-Log "Launching GenP version: $Selected"
-        $File = Get-ChildItem -Path $GenPPath -Filter $Selected -Recurse | Select-Object -First 1
-        try {
-            # Start process in the directory of the file so config.ini is found
-            Start-Process -FilePath $File.FullName -WorkingDirectory $File.DirectoryName
-            $StatusText.Text = "Launched $Selected"
-        } catch {
-            Write-Log "ERROR: Failed to launch $Selected: $($_.Exception.Message)"
+function Run-Zip ($Name, $Url, $TargetFile) {
+    $StatusText.Text = "Working..."; Write-Log "Downloading $Name Package (Direct CDN)..."
+    $ZipPath = Join-Path $env:TEMP "$Name.zip"
+    $ExtractPath = Join-Path $env:TEMP "CA_$Name"
+    
+    try {
+        Invoke-WebRequest -Uri $Url -OutFile $ZipPath -UseBasicParsing
+        Write-Log "Extracting files to Temp folder..."
+        if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
+        Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
+        
+        $Exe = Get-ChildItem $ExtractPath -Filter $TargetFile -Recurse | Select -First 1
+        if ($Exe) {
+            Write-Log "Running Setup: $($Exe.Name)..."
+            Start-Process $Exe.FullName -Wait
+            Write-Log "Task completed successfully."
+        } else {
+            Write-Log "ERROR: Target file '$TargetFile' not found inside the ZIP."
         }
-    }
+    } catch { Write-Log "ERROR: $($_.Exception.Message)" }
+    
+    Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
+    Remove-Item $ExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+    $StatusText.Text = "Ready."
+}
+
+# --- BINDINGS ---
+$Window.FindName("BtnWinOfficeTools").Add_Click({
+    Write-Log "Launching MAS (Microsoft Activation Scripts)..."
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+    Write-Log "MAS Execution finished."
 })
 
+$Window.FindName("BtnInstallOffice").Add_Click({
+    Write-Log "Launching Online Office Deployment Tool..."
+    Write-Log ">>> TIP: In the window that opens, select 'Install Office' from the menu!"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+    Write-Log "Office Deployment Tool closed."
+})
+
+$Window.FindName("BtnOfficeAct").Add_Click({ Run-ScriptOrExe -Name "OldActivator" -Url $Links.OldActivator -Extension ".exe" })
+$Window.FindName("BtnScrubber").Add_Click({ Run-Zip -Name "Scrubber" -Url $Links.Scrubber -TargetFile "OfficeScrubber.cmd" })
+$Window.FindName("BtnGenP").Add_Click({ Run-Zip -Name "GenP" -Url $Links.GenP -TargetFile "RunMe.exe" })
+$Window.FindName("BtnWinrar").Add_Click({ Run-Zip -Name "Winrar" -Url $Links.Winrar -TargetFile "Winrar.cmd" })
+$Window.FindName("BtnUpdate").Add_Click({ Run-ScriptOrExe -Name "SysUpdate" -Url $Links.UpdateSystem -Extension ".bat" })
+
+$Window.FindName("BtnSFC").Add_Click({ 
+    Write-Log "Starting SFC System Scan..."
+    Start-Process sfc -ArgumentList "/scannow" -Wait
+    Write-Log "SFC Scan finished."
+})
+
+$Window.FindName("BtnWifi").Add_Click({ 
+    Write-Log "Flushing DNS and Resetting Network..."
+    ipconfig /flushdns | Out-Null
+    Write-Log "Network operations completed."
+})
+
+$Window.FindName("BtnKey").Add_Click({
+    try {
+        $k = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform').BackupProductKeyDefault
+        if ($k) {
+            Write-Log "Detected Key: $k"
+            [System.Windows.MessageBox]::Show("Windows Key: $k", "Product Key")
+        } else {
+            Write-Log "No OEM/Digital key found."
+        }
+    } catch { Write-Log "Failed to retrieve key." }
+})
+
+Write-Log "CrazyAlex Suite v15 Initialized (Smart Installer Mode)."
 $Window.ShowDialog() | Out-Null
