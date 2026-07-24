@@ -2,9 +2,9 @@
 # CrazyAlexTool launcher
 # ==========================================================
 # This tiny file only forwards to the real script hosted in
-# the CrazyAlexTool repository. That means when you improve
-# CrazyAlexTool.ps1, users automatically get the new version
-# without any change here.
+# the CrazyAlexTool repository. When CrazyAlexTool.ps1 is
+# updated, users automatically get the new version without
+# any change here.
 # ==========================================================
 
 $ScriptUrl = "https://raw.githubusercontent.com/CrazyAlex15/CrazyAlexTool/main/CrazyAlexTool.ps1"
@@ -12,20 +12,27 @@ $ScriptUrl = "https://raw.githubusercontent.com/CrazyAlex15/CrazyAlexTool/main/C
 try {
     Write-Host "[i] Downloading CrazyAlexTool..." -ForegroundColor Cyan
 
-    $code = Invoke-WebRequest `
+    $response = Invoke-WebRequest `
         -Uri $ScriptUrl `
         -UseBasicParsing `
-        -ErrorAction Stop |
-        Select-Object -ExpandProperty Content
+        -ErrorAction Stop
+
+    $code = [string]$response.Content
 
     if ([string]::IsNullOrWhiteSpace($code)) {
         throw "Downloaded script was empty."
     }
 
-    if ($code -match "(?is)<html\b|<head\b|<body\b") {
-        throw "The URL returned HTML instead of PowerShell."
+    $trimmed = $code.TrimStart()
+
+    if (
+        $trimmed -match '^<!DOCTYPE\s+html' -or
+        $trimmed -match '^<html\b'
+    ) {
+        throw "The URL returned an HTML page instead of PowerShell."
     }
 
+    Write-Host "[i] Executing CrazyAlexTool..." -ForegroundColor Cyan
     Invoke-Expression $code
 }
 catch {
